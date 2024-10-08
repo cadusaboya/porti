@@ -28,9 +28,9 @@ export default function HomeScreen() {
                   name='cash-multiple'
                   type= 'material-community'
                   color='black'
-                  size={82}
-                  onPress={() => handleNavigate('Antecipação')} />
-                <Text style={styles.buttonText}>Antecipar</Text>
+                  size={60}
+                  onPress={() => handleNavigate('Calculator')} />
+                <Text style={styles.buttonText}>Calculadora</Text>
               </View>
               <View style={styles.supPosition}>
                 <Icon
@@ -38,9 +38,9 @@ export default function HomeScreen() {
                   name='clipboard-text-clock-outline'
                   type= 'material-community'
                   color='black'
-                  size={82}
-                  onPress={() => handleNavigate('Meus Pedidos')} />
-                <Text style={styles.buttonText}>Meus Pedidos</Text>
+                  size={60}
+                  onPress={() => handleNavigate('Meus')} />
+                <Text style={styles.buttonText}>Meus Portfolios</Text>
               </View>
         </View>
         <View style={styles.row}>
@@ -50,19 +50,9 @@ export default function HomeScreen() {
                   name='face-agent'
                   type= 'material-community'
                   color='black'
-                  size={82}
+                  size={60}
                   onPress={sendWhatsapp} />
                 <Text style={styles.buttonText}>Suporte</Text>
-              </View>
-              <View style={styles.supPosition}>
-                <Icon
-                  reverse
-                  name='hospital-building'
-                  type= 'material-community'
-                  color='black'
-                  size={82}
-                  onPress={() => handleNavigate('Meus Hospitais')} />
-                <Text style={styles.buttonText}>Meus Hospitais</Text>
               </View>
         </View>
       </View>

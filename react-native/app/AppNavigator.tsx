@@ -9,6 +9,8 @@ import Welcome from './tabs/welcome';
 import Login from './tabs/login';
 import ForgotPassword from './tabs/forgotpassword';
 import Profile from './tabs/profile';
+import Calculator from './tabs/calculator';
+import Result from './tabs/result';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +28,8 @@ const AppNavigator = () => {
       <Stack.Screen name="Esqueci minha senha" component={ForgotPassword} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="Calculator" component={Calculator} />
+      <Stack.Screen name="Result" component={Result} />
     </Stack.Navigator>
   );
 };
