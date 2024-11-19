@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Button, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useForm, Controller } from 'react-hook-form';
+import { TextInput } from 'react-native-paper';
 
-export default function LoanCalculator() {
+const { width, height } = Dimensions.get('window');
+
+const LoanCalculator = () => {
   const navigation = useNavigation();
-  const [loanValue, setLoanValue] = useState('');
-  const [interestRate, setInterestRate] = useState('');
-  const [installments, setInstallments] = useState('');
+  const { control, handleSubmit, formState: { errors } } = useForm();
 
-  const handleCalculate = () => {
-    const P = parseFloat(loanValue);  // Loan amount (Principal)
-    const r = parseFloat(interestRate) / 100;  // Monthly interest rate (as a percentage)
-    const n = parseInt(installments);  // Number of installments
+  const onSubmit = (data) => {
+    const P = parseFloat(data.loanValue);  // Loan amount (Principal)
+    const r = parseFloat(data.interestRate) / 100;  // Monthly interest rate (as a percentage)
+    const n = parseInt(data.installments);  // Number of installments
 
     if (!P || !r || !n) return;
 
-    // Monthly payment formula (using annuity formula)
     const monthlyPayment = (P * r) / (1 - Math.pow(1 + r, -n));
 
-    // Calculate payment schedule
     const paymentSchedule = [];
     let outstandingBalance = P;
 
@@ -42,40 +42,75 @@ export default function LoanCalculator() {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="Loan Amount"
-        value={loanValue}
-        onChangeText={setLoanValue}
-        keyboardType="numeric"
-        style={styles.input}
+      <Controller
+        name="loanValue"
+        control={control}
+        rules={{ required: true }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            label="Valor do empréstimo"
+            style={styles.input}
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            keyboardType="numeric"
+            returnKeyType="next"
+          />
+        )}
       />
-      <TextInput
-        placeholder="Interest Rate (%)"
-        value={interestRate}
-        onChangeText={setInterestRate}
-        keyboardType="numeric"
-        style={styles.input}
+      <Controller
+        name="interestRate"
+        control={control}
+        rules={{ required: true }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            label="Taxa de juros mensal (%)"
+            style={styles.input}
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            keyboardType="numeric"
+            returnKeyType="next"
+          />
+        )}
       />
-      <TextInput
-        placeholder="Number of Installments"
-        value={installments}
-        onChangeText={setInstallments}
-        keyboardType="numeric"
-        style={styles.input}
+      <Controller
+        name="installments"
+        control={control}
+        rules={{ required: true }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            label="Número de Parcelas"
+            style={styles.input}
+            value={value}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            keyboardType="numeric"
+            returnKeyType="next"
+          />
+        )}
       />
-      <Button title="Calculate" onPress={handleCalculate} />
+      <Button title="Calcular" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    flex: 1,
+    justifyContent: 'center',
+    padding: 50,
+    backgroundColor: '#E7E7E7',
   },
   input: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 10,
+    marginHorizontal: width * 0.1,
+    marginVertical: height * 0.01,
+    backgroundColor: 'white',
+    borderColor: 'black',
+    borderWidth: 0.3,
+    height: height * 0.06,
+    borderRadius: 4,
   },
 });
+
+export default LoanCalculator;

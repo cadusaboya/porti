@@ -39,7 +39,7 @@ export default function HomeScreen() {
                   type= 'material-community'
                   color='black'
                   size={60}
-                  onPress={() => handleNavigate('Meus')} />
+                  onPress={() => handleNavigate('Portfolios')} />
                 <Text style={styles.buttonText}>Meus Portfolios</Text>
               </View>
         </View>

@@ -11,6 +11,8 @@ import ForgotPassword from './tabs/forgotpassword';
 import Profile from './tabs/profile';
 import Calculator from './tabs/calculator';
 import Result from './tabs/result';
+import Portfolios from './tabs/portfolios';
+import PortfolioDetails from './tabs/portfoliodetails';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +32,8 @@ const AppNavigator = () => {
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="Calculator" component={Calculator} />
       <Stack.Screen name="Result" component={Result} />
+      <Stack.Screen name="Portfolios" component={Portfolios} />
+      <Stack.Screen name="PortfolioDetails" component={PortfolioDetails} />
     </Stack.Navigator>
   );
 };

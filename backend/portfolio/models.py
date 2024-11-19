@@ -10,6 +10,14 @@ class Portfolio(models.Model):
     current_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def patrimonial_value(self):
+        """
+        Calculates the patrimonial value as the sum of all loans associated with this portfolio.
+        """
+        total_loans = self.loans.aggregate(models.Sum('value_lent'))['value_lent__sum']
+        return total_loans or 0  # Return 0 if no loans exist
+
     def __str__(self):
         return self.name
 
@@ -49,15 +57,15 @@ class Loan(models.Model):
 
 class Transaction(models.Model):
     TRANSACTION_TYPES = [
-        ('LOAN', 'Loan'),
-        ('INSTALLMENT', 'Installment Payment'),
+        ('EMPRÉSTIMO', 'Empréstimo'),
+        ('PARCELA', 'Parcela'),
     ]
 
     portfolio = models.ForeignKey('Portfolio', on_delete=models.CASCADE, related_name='transactions')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(default=timezone.now)
 
     def __str__(self):
         return f'{self.get_transaction_type_display()} of {self.amount} for {self.portfolio.name}'

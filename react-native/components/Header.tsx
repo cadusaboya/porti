@@ -31,7 +31,7 @@ const Header = () => {
     return (
         <Appbar.Header>
             {renderHomeButton()}
-            <Appbar.Content title="Factor" style={{ flex: 1, alignItems: 'center' }} />
+            <Appbar.Content title="Porti" style={{ flex: 1, alignItems: 'center' }} />
             {renderProfileButton()}
         </Appbar.Header>
     );

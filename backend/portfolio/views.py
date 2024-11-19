@@ -7,6 +7,7 @@ from rest_framework import status
 from .serializers import PortfolioSerializer, LoanSerializer
 from .models import Portfolio, Loan, Transaction
 from decimal import Decimal
+from django.shortcuts import get_object_or_404
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -28,6 +29,22 @@ def create_portfolio(request):
         return Response(response_data, status=status.HTTP_201_CREATED)
     else:
         return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_user_portfolios(request):
+    # Get portfolios where the user is the owner
+    owned_portfolios = Portfolio.objects.filter(owner=request.user)
+
+    # Get portfolios where the user is a member
+    member_portfolios = Portfolio.objects.filter(members__id=request.user.id)
+
+    # Combine the two querysets and remove duplicates using distinct()
+    portfolios = (owned_portfolios | member_portfolios).distinct()
+    
+    # Serialize the result
+    serializer = PortfolioSerializer(portfolios, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -62,7 +79,7 @@ def add_loan_to_portfolio(request, portfolio_id):
         Transaction.objects.create(
             portfolio=portfolio,
             user=request.user,
-            transaction_type='LOAN',
+            transaction_type='EMPRÉSTIMO',
             amount=loan_value
         )
 
@@ -80,8 +97,8 @@ def receive_installment(request, portfolio_id, loan_id):
         return Response({'error': 'Portfolio not found'}, status=status.HTTP_404_NOT_FOUND)
 
     # Check if the logged-in user is a member of this portfolio
-    if not portfolio.members.filter(id=request.user.id).exists():
-        return Response({'error': 'You are not a member of this portfolio'}, status=status.HTTP_403_FORBIDDEN)
+    if not portfolio.members.filter(id=request.user.id).exists() and portfolio.owner != request.user:
+        return Response({'error': 'You are not authorized to access this portfolio'}, status=status.HTTP_403_FORBIDDEN)
     
     try:
         loan = Loan.objects.get(id=loan_id, portfolio=portfolio)
@@ -118,10 +135,36 @@ def receive_installment(request, portfolio_id, loan_id):
     Transaction.objects.create(
         portfolio=portfolio,
         user=request.user,
-        transaction_type='INSTALLMENT',
+        transaction_type='PARCELA',
         amount=installment_amount  # Record the full installment (principal + interest)
     )
 
     # Serialize the updated loan and return the response
     serializer = LoanSerializer(loan)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_portfolio_transactions(request, portfolio_id):
+    """
+    Retrieve all transactions for a given portfolio.
+    """
+    try:
+        # Fetch the portfolio or return 404 if not found
+        portfolio = get_object_or_404(Portfolio, id=portfolio_id)
+
+        # Check if the user is the owner or a member of the portfolio
+        if portfolio.owner != request.user and request.user not in portfolio.members.all():
+            return Response({'error': 'Access denied'}, status=status.HTTP_403_FORBIDDEN)
+
+        # Fetch the transactions for the portfolio
+        transactions = portfolio.transactions.all().values(
+            'id', 'transaction_type', 'amount', 'created_at', 'user__username'
+        )
+
+        # Return the transactions as a response
+        return Response({'transactions': transactions}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        # Handle unexpected errors
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

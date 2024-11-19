@@ -10,7 +10,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Portfolio
-        fields = ['id', 'name', 'description', 'users', 'current_balance', 'owner']  # Include current_balance and owner
+        fields = ['id', 'name', 'description', 'users', 'current_balance', 'patrimonial_value', 'owner']  # Include current_balance and owner
     
     def create(self, validated_data):
         # Pop 'users' out of validated_data to handle members separately
@@ -29,7 +29,7 @@ class LoanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Loan
-        fields = ['id', 'portfolio', 'name', 'value_lent', 'monthly_rate', 'number_of_installments', 'start_date', 'installment_value']
+        fields = ['id', 'portfolio', 'name', 'value_lent', 'monthly_rate', 'number_of_installments', 'installment_value']
 
     def get_installment_value(self, obj):
         return obj.calculate_installment_value()
