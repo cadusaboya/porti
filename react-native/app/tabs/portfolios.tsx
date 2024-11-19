@@ -23,7 +23,7 @@ export default function PortfolioList({ navigation }) {
   const renderPortfolioCard = ({ item }) => (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate('PortfolioDetails', { portfolioId: item.id })}
+      onPress={() => navigation.navigate('PortfolioDetailsTabs', { portfolioId: item.id })}
     >
       <Text style={styles.name}>{item.name}</Text>
       <Text style={styles.description}>{item.description || 'Sem descrição disponível'}</Text>

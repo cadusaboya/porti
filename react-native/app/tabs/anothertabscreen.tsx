@@ -11,7 +11,7 @@ type Transaction = {
   created_at: string;
 };
 
-const PortfolioDetails = ({ route }) => {
+const AnotherTabScreen = ({ route }) => {
   const { portfolioId } = route.params;
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -113,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PortfolioDetails;
+export default AnotherTabScreen;

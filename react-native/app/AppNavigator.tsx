@@ -1,5 +1,3 @@
-// AppNavigator.js
-
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './tabs/homescreen';
@@ -12,7 +10,7 @@ import Profile from './tabs/profile';
 import Calculator from './tabs/calculator';
 import Result from './tabs/result';
 import Portfolios from './tabs/portfolios';
-import PortfolioDetails from './tabs/portfoliodetails';
+import PortfolioDetailsTabs from './tabs/portfoliodetailstabs';  // PortfolioDetails now includes the tab navigation
 
 const Stack = createStackNavigator();
 
@@ -21,7 +19,7 @@ const AppNavigator = () => {
     <Stack.Navigator
       initialRouteName="Welcome"
       screenOptions={{
-        header: () => <Header />, // Use your custom header for all screens
+        header: () => <Header />, // Custom header for all screens
       }}
     >
       <Stack.Screen name="Welcome" component={Welcome} />
@@ -33,7 +31,7 @@ const AppNavigator = () => {
       <Stack.Screen name="Calculator" component={Calculator} />
       <Stack.Screen name="Result" component={Result} />
       <Stack.Screen name="Portfolios" component={Portfolios} />
-      <Stack.Screen name="PortfolioDetails" component={PortfolioDetails} />
+      <Stack.Screen name="PortfolioDetailsTabs" component={PortfolioDetailsTabs} />
     </Stack.Navigator>
   );
 };
